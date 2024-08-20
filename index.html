@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>3D Colorful Donut</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      background-color: #000;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Include Three.js from CDN -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script>
+    // Set up scene, camera, and renderer
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    document.body.appendChild(renderer.domElement);
+
+    // Create a Torus geometry (donut shape)
+    const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
+
+    // Create a MeshStandardMaterial with color
+    const material = new THREE.MeshStandardMaterial({
+      color: 0xff6347,
+      emissive: 0x072534,
+      metalness: 0.7,
+      roughness: 0.2
+    });
+
+    const donut = new THREE.Mesh(geometry, material);
+    scene.add(donut);
+
+    // Add a point light
+    const pointLight = new THREE.PointLight(0xffffff);
+    pointLight.position.set(50, 50, 50);
+    scene.add(pointLight);
+
+    // Add an ambient light
+    const ambientLight = new THREE.AmbientLight(0x404040); // Soft white light
+    scene.add(ambientLight);
+
+    // Position the camera
+    camera.position.z = 30;
+
+    // Animation function
+    function animate() {
+      requestAnimationFrame(animate);
+
+      // Rotate the donut
+      donut.rotation.x += 0.01;
+      donut.rotation.y += 0.01;
+
+      // Change color dynamically
+      donut.material.color.setHSL((Math.sin(Date.now() * 0.001) + 1) / 2, 1, 0.5);
+
+      renderer.render(scene, camera);
+    }
+
+    // Handle window resize
+    window.addEventListener('resize', () => {
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+    });
+
+    animate();
+  </script>
+</body>
+</html>
+
